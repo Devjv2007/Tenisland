@@ -6,6 +6,13 @@ import Account from './pages/account'
 import Cart from './pages/cart'
 import Sobre from './pages/sobre'
 import ProductPage from './pages/productpage';
+import Nike from './pages/nike'
+import Asics from './pages/asics'
+import Adidas from './pages/adidas'
+import Jordan from './pages/jordan'
+
+
+
 
 
 function App() {
@@ -19,6 +26,12 @@ function App() {
         <Route path="/account" element={<Account />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/sobre" element={<Sobre />} />
+        <Route path="/nike" element={<Nike />} />
+        <Route path="/asics" element={<Asics />} />
+        <Route path="/adidas" element={<Adidas />} />
+        <Route path="/jordan" element={<Jordan />} />
+
+        
         <Route path="/productpage" element={<ProductPage />} />
       </Routes>
       
