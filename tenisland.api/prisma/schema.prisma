@@ -1,0 +1,61 @@
+// Gerar cliente Prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Conexão com banco
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelos
+model Brand {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  logo_url    String?
+  website     String?
+  created_at  DateTime @default(now())
+
+  products Product[]
+
+  @@map("brands")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  image_url   String?
+  created_at  DateTime @default(now())
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             Int      @id @default(autoincrement())
+  name           String
+  description    String?
+  brand_id       Int
+  category_id    Int
+  price          Decimal  @db.Decimal(10, 2)
+  stock_quantity Int
+  size           String?
+  color          String?
+  image1         String?
+  image2         String?  // ← JÁ EXISTE NO SEU BANCO!
+  image3         String?  // ← JÁ EXISTE NO SEU BANCO!
+  image4         String?  // ← JÁ EXISTE NO SEU BANCO!
+  image5         String?  // ← JÁ EXISTE NO SEU BANCO!
+  is_active      Boolean  @default(true)
+  created_at     DateTime @default(now())
+
+  brand    Brand    @relation(fields: [brand_id], references: [id])
+  category Category @relation(fields: [category_id], references: [id])
+
+  @@map("products")
+}
+

@@ -10,6 +10,7 @@ import Nike from './pages/nike'
 import Asics from './pages/asics'
 import Adidas from './pages/adidas'
 import Jordan from './pages/jordan'
+import AdminDashboard from './admin/AdminDashboard';
 
 
 
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
+         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/account" element={<Account />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/sobre" element={<Sobre />} />
