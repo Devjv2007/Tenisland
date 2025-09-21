@@ -405,7 +405,7 @@ const ProductManagement: React.FC = () => {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-black"
                   />
                 </div>
 
@@ -415,7 +415,7 @@ const ProductManagement: React.FC = () => {
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                     rows={3}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-black"
                   />
                 </div>
 
@@ -425,7 +425,7 @@ const ProductManagement: React.FC = () => {
                     required
                     value={formData.brand_id}
                     onChange={(e) => setFormData({...formData, brand_id: e.target.value})}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-black"
                   >
                     <option value="">Selecione...</option>
                     {brands.map((brand) => (
@@ -442,7 +442,7 @@ const ProductManagement: React.FC = () => {
                     required
                     value={formData.category_id}
                     onChange={(e) => setFormData({...formData, category_id: e.target.value})}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-black"
                   >
                     <option value="">Selecione...</option>
                     {categories.map((category) => (
@@ -461,7 +461,7 @@ const ProductManagement: React.FC = () => {
                     required
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: e.target.value})}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-black"
                   />
                 </div>
 
@@ -472,7 +472,7 @@ const ProductManagement: React.FC = () => {
                     required
                     value={formData.stock_quantity}
                     onChange={(e) => setFormData({...formData, stock_quantity: e.target.value})}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-black"
                   />
                 </div>
 
@@ -482,7 +482,7 @@ const ProductManagement: React.FC = () => {
                     type="text"
                     value={formData.size}
                     onChange={(e) => setFormData({...formData, size: e.target.value})}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-black"
                     placeholder="Ex: 42"
                   />
                 </div>
@@ -493,7 +493,7 @@ const ProductManagement: React.FC = () => {
                     type="text"
                     value={formData.color}
                     onChange={(e) => setFormData({...formData, color: e.target.value})}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-black"
                     placeholder="Ex: Preto/Branco"
                   />
                 </div>
@@ -503,7 +503,7 @@ const ProductManagement: React.FC = () => {
               <div className="border-t pt-6">
                 <h4 className="text-md font-medium text-gray-900 mb-4">📸 Galeria de Imagens</h4>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-black">
                   {[1, 2, 3, 4, 5].map((num) => (
                     <div key={num} className="space-y-3">
                       <label className="block text-sm font-medium text-gray-700">

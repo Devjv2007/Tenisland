@@ -32,6 +32,7 @@ function App() {
         <Route path="/asics" element={<Asics />} />
         <Route path="/adidas" element={<Adidas />} />
         <Route path="/jordan" element={<Jordan />} />
+        <Route path="/product/:id" element={<ProductPage />} />
 
         
         <Route path="/productpage" element={<ProductPage />} />
