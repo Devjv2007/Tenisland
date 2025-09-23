@@ -23,7 +23,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string>('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>('');
 
@@ -39,17 +39,20 @@ export default function ProductPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch(`${API_URL}/products/${productId}`);
-      
+
       if (response.ok) {
         const productData = await response.json();
         setProduct(productData);
-        
+
         // Definir primeira imagem como selecionada
-        const firstImage = productData.image1 || productData.image2 || productData.image3;
+        const firstImage =
+          productData.image1 ||
+          productData.image2 ||
+          productData.image3;
         if (firstImage) {
-          setSelectedImage(firstImage);
+          setSelectedIndex(0);
         }
       } else {
         setError('Produto não encontrado');
@@ -69,7 +72,7 @@ export default function ProductPage() {
       product.image2,
       product.image3,
       product.image4,
-      product.image5
+      product.image5,
     ].filter(Boolean) as string[];
   };
 
@@ -77,11 +80,10 @@ export default function ProductPage() {
   const availableSizes = ['38', '39', '40', '41', '42', '43', '44', '45'];
 
   const handleAddToCart = () => {
-    // Implementar lógica do carrinho
     console.log('Adicionado ao carrinho:', {
       product,
       quantity,
-      selectedSize
+      selectedSize,
     });
     alert(`${product?.name} adicionado ao carrinho!`);
   };
@@ -101,10 +103,12 @@ export default function ProductPage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Produto não encontrado</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Produto não encontrado
+          </h2>
           <p className="text-gray-400 mb-6">{error}</p>
-          <Link 
-            to="/nike" 
+          <Link
+            to="/nike"
             className="bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
           >
             Voltar para produtos
@@ -117,58 +121,96 @@ export default function ProductPage() {
   const images = getAllImages(product);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white mb-72">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          
           {/* Galeria de Imagens */}
           <div className="space-y-6">
-            {/* Imagem Principal */}
-            <div className="aspect-square bg-gray-900 rounded-lg overflow-hidden">
-              {selectedImage ? (
-                <img
-                  src={selectedImage}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <svg className="mx-auto h-24 w-24 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <p>Sem imagem</p>
-                  </div>
-                </div>
-              )}
+            {/* Imagem Principal com efeito de rolagem */}
+            <div className="aspect-square bg-gray-900 rounded-lg overflow-hidden relative">
+              <div
+                className="flex h-full w-full transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${selectedIndex * 100}%)` }}
+              >
+                {images.map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    alt={product.name}
+                    className="w-full h-full object-cover flex-shrink-0"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                ))}
+              </div>
             </div>
 
-            {/* Thumbnails */}
+            {/* Carousel com Botões de Navegação */}
             {images.length > 1 && (
-              <div className="flex space-x-4 overflow-x-auto pb-2">
-                {images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(image)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImage === image 
-                        ? 'border-white' 
-                        : 'border-gray-700 hover:border-gray-500'
-                    }`}
+              <div className="relative">
+                {/* Botão Anterior */}
+                <button
+                  onClick={() =>
+                    setSelectedIndex(
+                      selectedIndex === 0
+                        ? images.length - 1
+                        : selectedIndex - 1
+                    )
+                  }
+                  className="absolute left-1 transform -mt-80 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
+                >
+                  <svg
+                    className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <img
-                      src={image}
-                      alt={`${product.name} ${index + 1}`}
-                      className="w-full h-full object-cover "
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
                     />
-                  </button>
-                ))}
+                  </svg>
+                </button>
+
+                {/* Botão Próximo */}
+                <button
+                  onClick={() =>
+                    setSelectedIndex((selectedIndex + 1) % images.length)
+                  }
+                  className="absolute right-1 top-1/2 transform -mt-80 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
+                >
+                  <svg
+                    className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+
+                {/* Indicadores */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  {images.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedIndex(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        selectedIndex === index
+                          ? 'bg-white scale-110'
+                          : 'bg-black bg-opacity-50 hover:bg-opacity-75'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -177,54 +219,46 @@ export default function ProductPage() {
           <div className="space-y-8">
             {/* Header */}
             <div>
-              <div className="flex items-center space-x-4 mb-2">
+              <div className="flex items-start space-x-4 mb-2">
                 {product.brand?.name && (
                   <span className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm font-medium">
                     {product.brand.name}
                   </span>
                 )}
-                {product.category?.name && (
-                  <span className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm font-medium">
-                    {product.category.name}
-                  </span>
-                )}
               </div>
-              
-              <h1 className="text-4xl font-bold text-white mb-4">{product.name}</h1>
-              
+
+              <h1 className="text-4xl font-bold text-white mb-4">
+                {product.name}
+              </h1>
+
               <div className="flex items-center space-x-4 mb-6">
                 <span className="text-3xl font-bold text-white">
                   R$ {(Number(product.price) || 0).toFixed(2)}
                 </span>
-                
-                <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  product.stock_quantity === 0 
-                    ? 'bg-red-900 text-red-300' 
-                    : product.stock_quantity < 5 
-                    ? 'bg-yellow-900 text-yellow-300' 
-                    : 'bg-green-900 text-green-300'
-                }`}>
-                  {product.stock_quantity === 0 
-                    ? 'Esgotado' 
-                    : product.stock_quantity < 5 
-                    ? `Restam ${product.stock_quantity}` 
-                    : 'Em estoque'
-                  }
+
+                <div
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    product.stock_quantity === 0
+                      ? 'bg-red-900 text-red-300'
+                      : product.stock_quantity < 5
+                      ? 'bg-yellow-900 text-yellow-300'
+                      : 'bg-green-900 text-green-300'
+                  }`}
+                >
+                  {product.stock_quantity === 0
+                    ? 'Esgotado'
+                    : product.stock_quantity < 5
+                    ? `Restam ${product.stock_quantity}`
+                    : 'Em estoque'}
                 </div>
               </div>
             </div>
 
-            {/* Descrição */}
-            {product.description && (
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Descrição</h3>
-                <p className="text-gray-300 leading-relaxed">{product.description}</p>
-              </div>
-            )}
-
             {/* Especificações */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Especificações</h3>
+              <h3 className="text-lg font-semibold text-white mb-3">
+                Especificações
+              </h3>
               <div className="space-y-2 text-gray-300">
                 {product.color && (
                   <div className="flex justify-between">
@@ -240,18 +274,24 @@ export default function ProductPage() {
                 )}
                 <div className="flex justify-between">
                   <span>Marca:</span>
-                  <span className="font-medium">{product.brand?.name || 'Não informado'}</span>
+                  <span className="font-medium">
+                    {product.brand?.name || 'Não informado'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Categoria:</span>
-                  <span className="font-medium">{product.category?.name || 'Não informado'}</span>
+                  <span className="font-medium">
+                    {product.category?.name || 'Não informado'}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Seleção de Tamanho */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Tamanho</h3>
+              <h3 className="text-lg font-semibold text-white mb-3">
+                Tamanho
+              </h3>
               <div className="grid grid-cols-4 gap-3">
                 {availableSizes.map((size) => (
                   <button
@@ -271,7 +311,9 @@ export default function ProductPage() {
 
             {/* Quantidade */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Quantidade</h3>
+              <h3 className="text-lg font-semibold text-white mb-3">
+                Quantidade
+              </h3>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -279,9 +321,15 @@ export default function ProductPage() {
                 >
                   -
                 </button>
-                <span className="text-xl font-bold text-white w-8 text-center">{quantity}</span>
+                <span className="text-xl font-bold text-white w-8 text-center">
+                  {quantity}
+                </span>
                 <button
-                  onClick={() => setQuantity(Math.min(product.stock_quantity, quantity + 1))}
+                  onClick={() =>
+                    setQuantity(
+                      Math.min(product.stock_quantity, quantity + 1)
+                    )
+                  }
                   className="w-12 h-12 bg-gray-800 text-white rounded-lg font-bold hover:bg-gray-700 transition-colors"
                   disabled={quantity >= product.stock_quantity}
                 >
@@ -301,36 +349,14 @@ export default function ProductPage() {
                     : 'bg-white text-black hover:bg-gray-200'
                 }`}
               >
-                {product.stock_quantity === 0 ? 'Produto Esgotado' : 'Adicionar ao Carrinho'}
+                {product.stock_quantity === 0
+                  ? 'Produto Esgotado'
+                  : 'Adicionar ao Carrinho'}
               </button>
 
               <button className="w-full py-4 border-2 border-white text-white rounded-lg font-bold text-lg hover:bg-white hover:text-black transition-colors">
                 Comprar Agora
               </button>
-            </div>
-
-            {/* Informações de Entrega */}
-            <div className="border-t border-gray-800 pt-6">
-              <div className="space-y-3 text-gray-300">
-                <div className="flex items-center space-x-3">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-                  <span>Frete grátis para compras acima de R$ 299</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>Garantia de 1 ano</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                  <span>30 dias para troca e devolução</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>

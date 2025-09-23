@@ -32,45 +32,39 @@ export default function Nike() {
 
   const fetchNikeProducts = async () => {
     try {
-      console.log('📡 Fazendo requisição para:', `${API_URL}/products`);
+
       setLoading(true);
       setError(null);
       
       const response = await fetch(`${API_URL}/products`);
-      console.log('📥 Response status:', response.status);
-      console.log('📥 Response ok:', response.ok);
+
+
       
       if (response.ok) {
         const allProducts = await response.json();
-        console.log('📦 Todos os produtos:', allProducts);
-        console.log('📊 Total de produtos:', allProducts.length);
+
         
         // Filtrar produtos Nike
         const nikeProducts = allProducts.filter((p: Product) => 
           p.brand?.name.toLowerCase() === 'nike'
         );
         
-        console.log('👟 Produtos Nike encontrados:', nikeProducts);
-        console.log('👟 Total produtos Nike:', nikeProducts.length);
-        
+
         setProducts(nikeProducts);
       } else {
-        console.error('❌ Erro na resposta da API:', response.status);
+
         setError(`Erro ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('❌ Erro ao carregar produtos Nike:', error);
+
       setError(`Erro de conexão: ${error}`);
     } finally {
-      console.log('✅ Finalizando busca...');
+
       setLoading(false);
     }
   };
 
 
-
-
-  console.log('🔄 Render - Loading:', loading, 'Products:', products.length, 'Error:', error);
 
   if (loading) {
     return (
