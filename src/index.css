@@ -1,19 +1,6 @@
 @import 'remixicon/fonts/remixicon.css';
 @import "tailwindcss";
 
-@layer base {
-  html, body {
-    background-color: #000000 !important;
-    color: #ffffff !important;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    overflow-x: hidden;
-  }
-
-  #root {
-    background-color: #000000;
-    min-height: 100vh;
-  }
-}
 
 @layer components {
   /* Scrollbar personalizada PRETA */
@@ -35,11 +22,3 @@
   }
 }
 
-@layer utilities {
-  /* Forçar imagens a aparecerem */
-  .force-image-display {
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-}

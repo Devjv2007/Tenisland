@@ -106,7 +106,7 @@ export default function ProductPage() {
           <h2 className="text-2xl font-bold text-white mb-4">
             Produto não encontrado
           </h2>
-          <p className="text-gray-400 mb-6">{error}</p>
+          <p className="text-black mb-6">{error}</p>
           <Link
             to="/nike"
             className="bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
@@ -121,8 +121,8 @@ export default function ProductPage() {
   const images = getAllImages(product);
 
   return (
-    <div className="min-h-screen bg-black text-white mb-72">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen  text-black mb-72">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Galeria de Imagens */}
           <div className="space-y-6">
@@ -180,7 +180,7 @@ export default function ProductPage() {
                   onClick={() =>
                     setSelectedIndex((selectedIndex + 1) % images.length)
                   }
-                  className="absolute right-1 top-1/2 transform -mt-80 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
+                  className="absolute right-1 transform -mt-80 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
                 >
                   <svg
                     className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
@@ -198,19 +198,29 @@ export default function ProductPage() {
                 </button>
 
                 {/* Indicadores */}
-                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                <div className=" absolute bottom-14 left-1/2 transform -translate-x-1/2 flex space-x-2">
                   {images.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedIndex(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      className={`w-3 h-3 rounded-full transition-all duration-300 -mt-60 ${
                         selectedIndex === index
-                          ? 'bg-white scale-110'
-                          : 'bg-black bg-opacity-50 hover:bg-opacity-75'
+                          ? 'bg-black scale-110'
+                          : 'bg-white bg-opacity-50 hover:bg-opacity-75'
                       }`}
                     />
                   ))}
                 </div>
+                  
+        {product.description && (
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-3">Descrição</h3>
+              <p className="text-black leading-relaxed max-w-md break-words">
+                {product.description}
+              </p>
+            </div>
+          )}
+  
               </div>
             )}
           </div>
@@ -219,20 +229,12 @@ export default function ProductPage() {
           <div className="space-y-8">
             {/* Header */}
             <div>
-              <div className="flex items-start space-x-4 mb-2">
-                {product.brand?.name && (
-                  <span className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm font-medium">
-                    {product.brand.name}
-                  </span>
-                )}
-              </div>
-
-              <h1 className="text-4xl font-bold text-white mb-4">
+              <h1 className="text-4xl font-bold text-black py-5">
                 {product.name}
               </h1>
 
               <div className="flex items-center space-x-4 mb-6">
-                <span className="text-3xl font-bold text-white">
+                <span className="text-3xl font-bold text-black">
                   R$ {(Number(product.price) || 0).toFixed(2)}
                 </span>
 
@@ -256,10 +258,10 @@ export default function ProductPage() {
 
             {/* Especificações */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">
+              <h3 className="text-lg font-semibold text-black mb-3">
                 Especificações
               </h3>
-              <div className="space-y-2 text-gray-300">
+              <div className="space-y-2 text-black">
                 {product.color && (
                   <div className="flex justify-between">
                     <span>Cor:</span>
@@ -299,8 +301,8 @@ export default function ProductPage() {
                     onClick={() => setSelectedSize(size)}
                     className={`p-3 border-2 rounded-lg text-center font-medium transition-colors ${
                       selectedSize === size
-                        ? 'border-white bg-white text-black'
-                        : 'border-gray-600 text-gray-300 hover:border-gray-400'
+                        ? 'border-white bg-gray-600 text-black'
+                        : 'border-gray-600 text-black hover:border-gray-400'
                     }`}
                   >
                     {size}
@@ -311,7 +313,7 @@ export default function ProductPage() {
 
             {/* Quantidade */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">
+              <h3 className="text-lg font-semibold text-black mb-3">
                 Quantidade
               </h3>
               <div className="flex items-center space-x-4">
@@ -321,7 +323,7 @@ export default function ProductPage() {
                 >
                   -
                 </button>
-                <span className="text-xl font-bold text-white w-8 text-center">
+                <span className="text-xl font-bold text-black w-8 text-center">
                   {quantity}
                 </span>
                 <button
@@ -345,8 +347,8 @@ export default function ProductPage() {
                 disabled={product.stock_quantity === 0}
                 className={`w-full py-4 rounded-lg font-bold text-lg transition-colors ${
                   product.stock_quantity === 0
-                    ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
-                    : 'bg-white text-black hover:bg-gray-200'
+                    ? 'bg-gray-800 text-black cursor-not-allowed'
+                    : 'border-2 border-black bg-white text-black hover:bg-gray-200'
                 }`}
               >
                 {product.stock_quantity === 0
@@ -354,7 +356,7 @@ export default function ProductPage() {
                   : 'Adicionar ao Carrinho'}
               </button>
 
-              <button className="w-full py-4 border-2 border-white text-white rounded-lg font-bold text-lg hover:bg-white hover:text-black transition-colors">
+              <button className="w-full py-4 border-2 border-black text-black rounded-lg font-bold text-lg hover:bg-white hover:text-black transition-colors">
                 Comprar Agora
               </button>
             </div>

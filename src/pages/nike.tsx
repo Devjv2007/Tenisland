@@ -70,8 +70,7 @@ export default function Nike() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="text-white text-xl mb-4">Carregando produtos Nike...</div>
-          <div className="text-gray-400 text-sm">Conectando com {API_URL}/products</div>
+          <div className="text-black text-xl mb-4">Carregando produtos Nike...</div>
         </div>
       </div>
     );
@@ -81,7 +80,7 @@ export default function Nike() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center bg-gray-900 border border-gray-700 rounded-lg p-8 max-w-md">
-          <h3 className="text-white text-xl font-bold mb-4">Erro ao Carregar</h3>
+          <h3 className="text-black text-xl font-bold mb-4">Erro ao Carregar</h3>
           <p className="text-gray-300 mb-4">{error}</p>
           <button 
             onClick={fetchNikeProducts}
@@ -97,10 +96,10 @@ export default function Nike() {
 
   return (
     <>
-      <div className="min-h-screen bg-black py-10">
+      <div className="min-h-screen bg-white py-10">
         <div className="text-center">
           
-          <h1 className="text-6xl font-bold text-white mb-30">Nike Air</h1>
+          <h1 className="text-6xl font-bold text-black mb-30">Nike Air</h1>
        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -111,12 +110,12 @@ export default function Nike() {
     <div key={product.id} className="group cursor-pointer">
      
       {/* Container da Imagem */}
-      <div className="relative aspect-square mb-6 bg-gray-900 rounded-lg overflow-hidden border border-gray-800">
+      <div className="relative aspect-square mb-6">
           <Link to={`/product/${product.id}`}>
         {/* Badge de Estoque */}
         {product.stock_quantity < 5 && product.stock_quantity > 0 && (
           <div className="absolute top-3 left-3 z-10">
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded font-medium">
+            <span className="bg-red-600 text-black text-xs px-2 py-1 rounded font-medium">
               Últimas {product.stock_quantity}
             </span>
           </div>
@@ -153,7 +152,7 @@ export default function Nike() {
 
                     {/* Informações do Produto */}
                     <div className="space-y-3">
-                      <h3 className="text-lg font-medium text-white group-hover:text-gray-300 transition-colors">
+                      <h3 className="text-lg font-medium text-black group-hover:text-gray-300 transition-colors">
                         {product.name}
                       </h3>
 
@@ -168,7 +167,7 @@ export default function Nike() {
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-white">
+                        <span className="text-2xl font-bold text-black">
                           R$ {(Number(product.price) || 0).toFixed(2)}
                         </span>
                         
@@ -193,7 +192,7 @@ export default function Nike() {
             </div>
           ) : (
             <div className="text-center py-16">
-              <h3 className="text-2xl font-medium text-white mb-4">
+              <h3 className="text-2xl font-medium text-black mb-4">
                 Nenhum produto Nike encontrado
               </h3>
               <p className="text-gray-400 mb-6">

@@ -128,7 +128,7 @@ export default function Home() {
             className="h-72 rounded-lg hover:scale-105 transition-transform duration-200"
           />
           <img
-            src="https://i.pinimg.com/1200x/9d/2a/e5/9d2ae5d4ce4e9a11059f2209abeadaf3.jpg"
+            src="https://www.asphaltgold.com/cdn/shop/files/JqKNyDtIHpKh5m5Gqo55_1203A558-101-Asics-GEL-NYC--Utility--White-Black-sm-1.jpg?crop=center&height=768&v=1737719104&width=768"
             className="h-72 rounded-lg hover:scale-105 transition-transform duration-200"
           />  
           <img
@@ -139,30 +139,32 @@ export default function Home() {
       </section>
     
 
-      
+
+
+
       <section className="flex flex-row mx-auto max-w-6xl p-6 ">
         <Link to="/nike">
           <img
-            src="https://i.pinimg.com/736x/c6/c6/1d/c6c61d29f6083b921d5a866ad70c6d79.jpg"
-            className="h-72 m-5 hover:scale-105 transition-transform duration-200"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7-dpKSxRuVcSyDRPMgEBBfweI42FyTtr0Kw&s"
+            className="h-64 m-5 hover:scale-105 transition-transform duration-200"
           />
         </Link>
         <Link to="/asics">
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgKvgJInI1jqUtY5bXbu22jJgc8ij-Tc-3dHWkjMgoxIT2ZNLmnGXPrfCRH47CswdVPz4&usqp=CAU"
-            className="h-72 m-5 hover:scale-105 transition-transform duration-200"
+            src="https://i.pinimg.com/736x/37/1f/20/371f20c81bc1d31cf5ab3c6f3fa746fd.jpg"
+            className="h-64 m-5 hover:scale-105 transition-transform duration-200"
           />
         </Link>
         <Link to="/adidas">
           <img
-            src="https://static.vecteezy.com/ti/vetor-gratis/p1/19136310-de-logotipo-adidas-gratis-de-icone-adidas-gratis-vetor.jpg"
-            className="h-72 m-5 hover:scale-105 transition-transform duration-200"
+            src="https://turbologo.com/articles/wp-content/uploads/2019/07/Three-Bars-adidas-logo-1.jpg.webp"
+            className="h-64 m-5 hover:scale-105 transition-transform duration-200"
           />
         </Link>
         <Link to="/jordan">
           <img
-            src="https://i.pinimg.com/736x/a2/bc/bb/a2bcbb216b790eb34844962944a3a16e.jpg"
-            className="h-72 m-5 hover:scale-105 transition-transform duration-200"
+            src="https://img.icons8.com/?size=192&id=45774&format=png"
+            className="h-64 m-5 hover:scale-105 transition-transform duration-200"
           />
         </Link>
       </section>
