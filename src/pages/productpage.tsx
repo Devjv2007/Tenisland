@@ -106,7 +106,7 @@ export default function ProductPage() {
           <h2 className="text-2xl font-bold text-white mb-4">
             Produto não encontrado
           </h2>
-          <p className="text-black mb-6">{error}</p>
+          <p className="text-white mb-6">{error}</p>
           <Link
             to="/nike"
             className="bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
@@ -121,13 +121,15 @@ export default function ProductPage() {
   const images = getAllImages(product);
 
   return (
-    <div className="min-h-screen  text-black mb-72">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1">
+    <div className="min-h-screen bg-white text-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Galeria de Imagens */}
-          <div className="space-y-6">
+          
+          {/* Galeria de Imagens - CONTAINER PRINCIPAL COM POSITION RELATIVE */}
+          <div className="relative space-y-6">
+            
             {/* Imagem Principal com efeito de rolagem */}
-            <div className="aspect-square bg-gray-900 rounded-lg overflow-hidden relative">
+            <div className="aspect-square rounded-lg overflow-hidden relative">
               <div
                 className="flex h-full w-full transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${selectedIndex * 100}%)` }}
@@ -144,83 +146,70 @@ export default function ProductPage() {
                   />
                 ))}
               </div>
+
+              {/* Botões de Navegação DENTRO da imagem */}
+              {images.length > 1 && (
+                <>
+                  {/* Botão Anterior */}
+                  <button
+                    onClick={() =>
+                      setSelectedIndex(
+                        selectedIndex === 0
+                          ? images.length - 1
+                          : selectedIndex - 1
+                      )
+                    }
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2  bg-opacity-50 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
+                  >
+                    <svg
+                      className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  {/* Botão Próximo */}
+                  <button
+                    onClick={() =>
+                      setSelectedIndex((selectedIndex + 1) % images.length)
+                    }
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2  bg-opacity-50 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
+                  >
+                    <svg
+                      className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Carousel com Botões de Navegação */}
-            {images.length > 1 && (
-              <div className="relative">
-                {/* Botão Anterior */}
-                <button
-                  onClick={() =>
-                    setSelectedIndex(
-                      selectedIndex === 0
-                        ? images.length - 1
-                        : selectedIndex - 1
-                    )
-                  }
-                  className="absolute left-1 transform -mt-80 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
-                >
-                  <svg
-                    className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
+           
 
-                {/* Botão Próximo */}
-                <button
-                  onClick={() =>
-                    setSelectedIndex((selectedIndex + 1) % images.length)
-                  }
-                  className="absolute right-1 transform -mt-80 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
-                >
-                  <svg
-                    className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-
-                {/* Indicadores */}
-                <div className=" absolute bottom-14 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                  {images.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedIndex(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 -mt-60 ${
-                        selectedIndex === index
-                          ? 'bg-black scale-110'
-                          : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                      }`}
-                    />
-                  ))}
-                </div>
-                  
-        {product.description && (
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Descrição</h3>
-              <p className="text-black leading-relaxed max-w-md break-words">
-                {product.description}
-              </p>
-            </div>
-          )}
-  
+            {/* Descrição do Produto */}
+            {product.description && (
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold text-black mb-3">Descrição</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  {product.description}
+                </p>
               </div>
             )}
           </div>
@@ -229,7 +218,7 @@ export default function ProductPage() {
           <div className="space-y-8">
             {/* Header */}
             <div>
-              <h1 className="text-4xl font-bold text-black py-5">
+              <h1 className="text-4xl font-bold text-black mb-4">
                 {product.name}
               </h1>
 
@@ -241,10 +230,10 @@ export default function ProductPage() {
                 <div
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
                     product.stock_quantity === 0
-                      ? 'bg-red-900 text-red-300'
+                      ? 'bg-red-100 text-red-800'
                       : product.stock_quantity < 5
-                      ? 'bg-yellow-900 text-yellow-300'
-                      : 'bg-green-900 text-green-300'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-green-100 text-green-800'
                   }`}
                 >
                   {product.stock_quantity === 0
@@ -257,32 +246,32 @@ export default function ProductPage() {
             </div>
 
             {/* Especificações */}
-            <div>
-              <h3 className="text-lg font-semibold text-black mb-3">
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold text-black mb-4">
                 Especificações
               </h3>
-              <div className="space-y-2 text-black">
+              <div className="space-y-3 text-gray-700">
                 {product.color && (
                   <div className="flex justify-between">
                     <span>Cor:</span>
-                    <span className="font-medium">{product.color}</span>
+                    <span className="font-medium text-black">{product.color}</span>
                   </div>
                 )}
                 {product.size && (
                   <div className="flex justify-between">
                     <span>Tamanho:</span>
-                    <span className="font-medium">{product.size}</span>
+                    <span className="font-medium text-black">{product.size}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span>Marca:</span>
-                  <span className="font-medium">
+                  <span className="font-medium text-black">
                     {product.brand?.name || 'Não informado'}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Categoria:</span>
-                  <span className="font-medium">
+                  <span className="font-medium text-black">
                     {product.category?.name || 'Não informado'}
                   </span>
                 </div>
@@ -291,7 +280,7 @@ export default function ProductPage() {
 
             {/* Seleção de Tamanho */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">
+              <h3 className="text-lg font-semibold text-black mb-4">
                 Tamanho
               </h3>
               <div className="grid grid-cols-4 gap-3">
@@ -301,8 +290,8 @@ export default function ProductPage() {
                     onClick={() => setSelectedSize(size)}
                     className={`p-3 border-2 rounded-lg text-center font-medium transition-colors ${
                       selectedSize === size
-                        ? 'border-white bg-gray-600 text-black'
-                        : 'border-gray-600 text-black hover:border-gray-400'
+                        ? 'border-black bg-black text-white'
+                        : 'border-gray-300 text-black hover:border-gray-500'
                     }`}
                   >
                     {size}
@@ -313,13 +302,13 @@ export default function ProductPage() {
 
             {/* Quantidade */}
             <div>
-              <h3 className="text-lg font-semibold text-black mb-3">
+              <h3 className="text-lg font-semibold text-black mb-4">
                 Quantidade
               </h3>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-12 h-12 bg-gray-800 text-white rounded-lg font-bold hover:bg-gray-700 transition-colors"
+                  className="w-12 h-12 bg-gray-200 text-black rounded-lg font-bold hover:bg-gray-300 transition-colors"
                 >
                   -
                 </button>
@@ -332,7 +321,7 @@ export default function ProductPage() {
                       Math.min(product.stock_quantity, quantity + 1)
                     )
                   }
-                  className="w-12 h-12 bg-gray-800 text-white rounded-lg font-bold hover:bg-gray-700 transition-colors"
+                  className="w-12 h-12 bg-gray-200 text-black rounded-lg font-bold hover:bg-gray-300 transition-colors"
                   disabled={quantity >= product.stock_quantity}
                 >
                   +
@@ -347,8 +336,8 @@ export default function ProductPage() {
                 disabled={product.stock_quantity === 0}
                 className={`w-full py-4 rounded-lg font-bold text-lg transition-colors ${
                   product.stock_quantity === 0
-                    ? 'bg-gray-800 text-black cursor-not-allowed'
-                    : 'border-2 border-black bg-white text-black hover:bg-gray-200'
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-black text-white hover:bg-gray-800'
                 }`}
               >
                 {product.stock_quantity === 0
@@ -356,7 +345,7 @@ export default function ProductPage() {
                   : 'Adicionar ao Carrinho'}
               </button>
 
-              <button className="w-full py-4 border-2 border-black text-black rounded-lg font-bold text-lg hover:bg-white hover:text-black transition-colors">
+              <button className="w-full py-4 border-2 border-black text-black rounded-lg font-bold text-lg hover:bg-black hover:text-white transition-colors">
                 Comprar Agora
               </button>
             </div>

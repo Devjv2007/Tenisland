@@ -10,7 +10,7 @@
                     <img 
                         src="https://img.lovepik.com/png/20231120/orange-and-grey-nike-sneaker-illustration-clipart-vector-sticker_642174_wh860.png"
                         alt="Logo"
-                        className="w-15 h-15 m-2 object-cover rounded-lg hover:opacity-80 transition-opacity"
+                        className="w-15 h-15 m-2 mt-3 object-cover rounded-lg hover:opacity-80 transition-opacity"
                     />
                 </Link>
             <div>
