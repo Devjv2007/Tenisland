@@ -201,32 +201,32 @@ export default function Sidebar() {
             </div>
           </div>
 
-          <div className="py-2 max-h-64 overflow-y-auto">
-            {brands.length > 0 ? (
-              brands.map((brand) => {
-                const brandPath = `/${brand.slug || brand.name.toLowerCase()}`;
-                const isActive = location.pathname === brandPath;
-                
-                return (
-                  <Link
-                    key={brand.id}
-                    to={brandPath}
-                    className={`block px-4 py-3 text-sm transition-all duration-200 hover:translate-x-1 ${
-                      isActive 
-                        ? 'bg-black text-white font-medium border-l-4 border-l-white' 
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-black hover:border-l-4 hover:border-l-black'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span>{brand.name}</span>
-                      <i className="ri-arrow-right-s-line text-xs opacity-50"></i>
-                    </div>
-                  </Link>
-                );
-              })
-            ) : (
-              <p className="px-4 py-3 text-sm text-gray-500 italic">Nenhuma marca encontrada</p>
-            )}
+        <div className="py-2 max-h-64 overflow-y-auto">
+          {brands.length > 0 ? (
+            brands.map((brand) => {
+              const brandPath = `/${brand.name.toLowerCase()}`; // ✅ Nike → /nike
+              const isActive = location.pathname === brandPath;
+              
+              return (
+                <Link
+                  key={brand.id}
+                  to={brandPath}
+                  className={`block px-4 py-3 text-sm transition-all duration-200 hover:translate-x-1 ${
+                    isActive 
+                      ? 'bg-black text-white font-medium border-l-4 border-l-white' 
+                      : 'text-gray-700 hover:bg-gray-50 hover:text-black hover:border-l-4 hover:border-l-black'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{brand.name}</span>
+                    <i className="ri-arrow-right-s-line text-xs opacity-50"></i>
+                  </div>
+                </Link>
+              );
+            })
+          ) : (
+            <p className="px-4 py-3 text-sm text-gray-500 italic">Nenhuma marca encontrada</p>
+          )}
           </div>
         </div>
       </Tooltip>
@@ -249,25 +249,25 @@ export default function Sidebar() {
 
           <div className="py-2 max-h-64 overflow-y-auto">
             {categories.length > 0 ? (
-              categories.map((category) => {
-                const categoryPath = `/category/${category.slug || category.id}`;
-                const isActive = location.pathname === categoryPath;
-                
-                return (
-                  <Link
-                    key={category.id}
-                    to={categoryPath}
-                    className={`block px-4 py-3 text-sm transition-all duration-200 hover:translate-x-1 ${
-                      isActive 
-                        ? 'bg-black text-white font-medium border-l-4 border-l-white' 
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-black hover:border-l-4 hover:border-l-black'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span>{category.name}</span>
-                      <i className="ri-arrow-right-s-line text-xs opacity-50"></i>
-                    </div>
-                  </Link>
+  categories.map((category) => {
+    const categoryPath = `/category/${category.name.toLowerCase()}`;
+    const isActive = location.pathname === categoryPath;
+    
+    return (
+      <Link
+        key={category.id}
+        to={categoryPath} // ✅ Novo link dinâmico
+        className={`block px-4 py-3 text-sm transition-all duration-200 hover:translate-x-1 ${
+          isActive 
+            ? 'bg-black text-white font-medium border-l-4 border-l-white' 
+            : 'text-gray-700 hover:bg-gray-50 hover:text-black hover:border-l-4 hover:border-l-black'
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <span>{category.name}</span>
+          <i className="ri-arrow-right-s-line text-xs opacity-50"></i>
+        </div>
+      </Link>
                 );
               })
             ) : (

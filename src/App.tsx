@@ -8,11 +8,9 @@ import Account from './pages/account'
 import Cart from './pages/cart'
 import Sobre from './pages/sobre'
 import ProductPage from './pages/productpage';
-import Nike from './pages/nike'
-import Asics from './pages/asics'
-import Adidas from './pages/adidas'
-import Jordan from './pages/jordan'
 import AdminDashboard from './admin/AdminDashboard';
+import BrandPage from './pages/brands'; // ✅ Nova importação
+import CategoryPage from './pages/categories'; // ✅ Nova importação
 
 function App() {
   const location = useLocation();
@@ -35,11 +33,9 @@ function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/sobre" element={<Sobre />} />
-            <Route path="/nike" element={<Nike />} />
-            <Route path="/asics" element={<Asics />} />
-            <Route path="/adidas" element={<Adidas />} />
-            <Route path="/jordan" element={<Jordan />} />
             <Route path="/product/:id" element={<ProductPage />} />
+            <Route path="/:brandName" element={<BrandPage />} />
+            <Route path="/category/:categoryName" element={<CategoryPage />} />
             <Route path="/productpage" element={<ProductPage />} />
           </Routes>
       <Footer/>
