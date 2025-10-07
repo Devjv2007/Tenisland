@@ -166,9 +166,10 @@ export default function Sidebar() {
                 onMouseEnter={(e) => handleMouseEnter('brands', e)}
                 onMouseLeave={() => handleMouseLeave('brands')}
               >
-                <i className="ri-price-tag-3-line text-xl"></i>
+                <i className="ri-store-2-line text-xl"></i>
               </div>
             </div>
+            
 
             {/* Ícone Categorias */}
             <div className="mb-4">
@@ -178,6 +179,19 @@ export default function Sidebar() {
                 onMouseLeave={() => handleMouseLeave('categories')}
               >
                 <i className="ri-grid-line text-xl"></i>
+              </div>
+            </div>
+
+             <div className="mb-4">
+
+              <div 
+                className="flex items-center justify-center w-16 h-16 text-gray-600 hover:bg-gray-100 hover:text-black transition-colors cursor-pointer rounded-lg mx-2"
+              >
+     
+                <Link
+                to="/favorites"
+                className="ri-heart-line text-xl"
+                ></Link>
               </div>
             </div>
 

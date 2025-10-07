@@ -21,36 +21,22 @@ const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: ["http://192.168.15.167:5173", "http://localhost:5173"],
+}));
+
 app.use(express.json());
 
-// Rota de teste
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'API da Loja de Tênis funcionando! 🚀',
-    endpoints: {
-      auth: '/api/auth',
-      products: '/api/products',
-      brands: '/api/brands',
-      categories: '/api/categories',
-      cart: '/api/cart',
-      wishlist: '/api/wishlist',
-      orders: '/api/orders',
-      addresses: '/api/addresses'
-    }
-  });
-});
-
-// Rotas da API
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productsRoutes); 
-app.use('/api/brands', brandsRoutes);
-app.use('/api/categories', categoriesRoutes);
-app.use('/api/cart', cartRoutes);
-app.use('/api/wishlist', wishlistRoutes);
-app.use('/api/orders', ordersRoutes);
-app.use('/api/addresses', addressesRoutes);
-app.use('/api/users', usersRoutes);
+// Rotas
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productsRoutes);
+app.use("/api/brands", brandsRoutes);
+app.use("/api/categories", categoriesRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/orders", ordersRoutes);
+app.use("/api/addresses", addressesRoutes);
+app.use("/api/users", usersRoutes); // SEM barra no final
 
 // Iniciar servidor
 app.listen(PORT, () => {
@@ -66,8 +52,11 @@ app.listen(PORT, () => {
   console.log(`   - Wishlist: http://localhost:${PORT}/api/wishlist`);
   console.log(`   - Orders: http://localhost:${PORT}/api/orders`);
   console.log(`   - Addresses: http://localhost:${PORT}/api/addresses`);
+  console.log(`   - Users: http://localhost:${PORT}/api/users`);
 });
 
 process.on('beforeExit', async () => {
   await prisma.$disconnect();
 });
+
+// REMOVIDO: export default app

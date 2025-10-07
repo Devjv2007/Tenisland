@@ -1,58 +1,63 @@
-// Em src/routes/users.ts
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+// src/routes/users.ts
+import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-// GET /users - Listar todos os usuários (admin)
-router.get('/', async (req, res) => {
+// Health check
+router.get("/health", (_req, res) => {
+  return res.status(200).send("ok");
+});
+
+// Criar usuário
+router.post("/", async (req, res) => {
   try {
-    const users = await prisma.user.findMany({
+    const { first_name, last_name, email, phone, birth_date, password } = req.body;
+
+    if (!first_name || !email || !password) {
+      return res.status(400).json({ error: "first_name, email e password são obrigatórios." });
+    }
+
+    const exists = await prisma.user.findUnique({ where: { email } });
+    if (exists) return res.status(409).json({ error: "E-mail já cadastrado." });
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const user = await prisma.user.create({
+      data: {
+        firstName: first_name,
+        lastName: last_name || null,
+        email,
+        phone: phone || null,
+        birthDate: birth_date ? new Date(birth_date) : null,
+        passwordHash,
+        isActive: true,
+      },
       select: {
         id: true,
-        first_name: true,
-        last_name: true,
+        firstName: true,
+        lastName: true,
         email: true,
         phone: true,
-        birth_date: true,
-        is_active: true,
-        created_at: true,
-        _count: { select: { orders: true } }
+        birthDate: true,
+        isActive: true,
+        createdAt: true,
       },
-      orderBy: { created_at: 'desc' }
     });
-    
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar usuários' });
-  }
-});
 
-// PUT /users/:id - Atualizar usuário
-router.put('/:id', async (req, res) => {
-  try {
-    const user = await prisma.user.update({
-      where: { id: parseInt(req.params.id) },
-      data: req.body
-    });
-    
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao atualizar usuário' });
-  }
-});
+    const token = jwt.sign(
+      { sub: user.id, email: user.email },
+      process.env.JWT_SECRET || "dev_secret",
+      { expiresIn: "7d" }
+    );
 
-// DELETE /users/:id - Deletar usuário
-router.delete('/:id', async (req, res) => {
-  try {
-    await prisma.user.delete({
-      where: { id: parseInt(req.params.id) }
-    });
-    
-    res.json({ message: 'Usuário excluído com sucesso' });
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao excluir usuário' });
+    return res.status(201).json({ token, user });
+  } catch (e) {
+    console.error("POST /users error:", e);
+    return res.status(500).json({ error: "Erro ao criar usuário" });
   }
 });
 

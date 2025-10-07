@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface Product {
   id: number;
@@ -26,46 +27,61 @@ export default function ProductPage() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>('');
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const { adicionarAosFavoritos, removerDosFavoritos, verificarSeFavorito, favorites } = useFavorites();
 
   const API_URL = 'http://localhost:3001/api';
+
+  // Função para buscar o produto
+  const fetchProduct = useCallback(async (productId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/products/${productId}`);
+      if (!response.ok) {
+        throw new Error('Produto não encontrado');
+      }
+      const data = await response.json();
+      setProduct(data);
+    } catch (err: any) {
+      setError(err.message || 'Erro ao buscar produto');
+      setProduct(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [API_URL]);
 
   useEffect(() => {
     if (id) {
       fetchProduct(id);
     }
-  }, [id]);
+  }, [id, fetchProduct]);
 
-  const fetchProduct = async (productId: string) => {
-    try {
-      setLoading(true);
-      setError(null);
+  // Atualiza isFavorite quando product ou favorites mudar
+  useEffect(() => {
+    if (product) {
+      setIsFavorite(verificarSeFavorito(product.id));
+    }
+  }, [product, favorites]);
 
-      const response = await fetch(`${API_URL}/products/${productId}`);
+  const toggleFavorite = () => {
+    if (!product) return;
 
-      if (response.ok) {
-        const productData = await response.json();
-        setProduct(productData);
-
-        // Definir primeira imagem como selecionada
-        const firstImage =
-          productData.image1 ||
-          productData.image2 ||
-          productData.image3;
-        if (firstImage) {
-          setSelectedIndex(0);
-        }
-      } else {
-        setError('Produto não encontrado');
-      }
-    } catch (error) {
-      setError('Erro ao carregar produto');
-      console.error('Erro:', error);
-    } finally {
-      setLoading(false);
+    if (isFavorite) {
+      removerDosFavoritos(product.id);
+    } else {
+      adicionarAosFavoritos({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image1 || product.image2 || product.image3 || '',
+        brand: product.brand?.name,
+        category: product.category?.name,
+      });
     }
   };
 
-  // Obter todas as imagens disponíveis
   const getAllImages = (product: Product): string[] => {
     return [
       product.image1,
@@ -76,7 +92,6 @@ export default function ProductPage() {
     ].filter(Boolean) as string[];
   };
 
-  // Tamanhos disponíveis (mockado - você pode puxar da API)
   const availableSizes = ['38', '39', '40', '41', '42', '43', '44', '45'];
 
   const handleAddToCart = () => {
@@ -125,10 +140,10 @@ export default function ProductPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           
-          {/* Galeria de Imagens - CONTAINER PRINCIPAL COM POSITION RELATIVE */}
+          {/* Galeria de Imagens */}
           <div className="relative space-y-6">
             
-            {/* Imagem Principal com efeito de rolagem */}
+            {/* Imagem Principal */}
             <div className="aspect-square rounded-lg overflow-hidden relative">
               <div
                 className="flex h-full w-full transition-transform duration-500 ease-in-out"
@@ -147,10 +162,17 @@ export default function ProductPage() {
                 ))}
               </div>
 
-              {/* Botões de Navegação DENTRO da imagem */}
+              {/* Botão de Favorito */}
+              <button
+                onClick={toggleFavorite}
+                className="absolute top-4 right-4 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all duration-200 z-20 group shadow-lg"
+              >
+                <i className={`${isFavorite ? 'ri-heart-fill text-red-500' : 'ri-heart-line text-gray-700'} text-2xl group-hover:scale-110 transition-transform duration-200`}></i>
+              </button>
+
+              {/* Botões de Navegação */}
               {images.length > 1 && (
                 <>
-                  {/* Botão Anterior */}
                   <button
                     onClick={() =>
                       setSelectedIndex(
@@ -159,7 +181,7 @@ export default function ProductPage() {
                           : selectedIndex - 1
                       )
                     }
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2  bg-opacity-50 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-opacity-50 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
                   >
                     <svg
                       className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
@@ -176,12 +198,11 @@ export default function ProductPage() {
                     </svg>
                   </button>
 
-                  {/* Botão Próximo */}
                   <button
                     onClick={() =>
                       setSelectedIndex((selectedIndex + 1) % images.length)
                     }
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2  bg-opacity-50 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-opacity-50 hover:bg-opacity-70 text-black p-3 rounded-full transition-all duration-200 z-10 group"
                   >
                     <svg
                       className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
@@ -201,8 +222,6 @@ export default function ProductPage() {
               )}
             </div>
 
-           
-
             {/* Descrição do Produto */}
             {product.description && (
               <div className="bg-gray-50 p-6 rounded-lg">
@@ -216,7 +235,6 @@ export default function ProductPage() {
 
           {/* Informações do Produto */}
           <div className="space-y-8">
-            {/* Header */}
             <div>
               <h1 className="text-4xl font-bold text-black mb-4">
                 {product.name}
@@ -245,7 +263,6 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Especificações */}
             <div className="bg-gray-50 p-6 rounded-lg">
               <h3 className="text-lg font-semibold text-black mb-4">
                 Especificações
@@ -278,7 +295,6 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Seleção de Tamanho */}
             <div>
               <h3 className="text-lg font-semibold text-black mb-4">
                 Tamanho
@@ -300,7 +316,6 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Quantidade */}
             <div>
               <h3 className="text-lg font-semibold text-black mb-4">
                 Quantidade
@@ -329,7 +344,6 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Botões de Ação */}
             <div className="space-y-4">
               <button
                 onClick={handleAddToCart}

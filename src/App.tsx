@@ -7,10 +7,12 @@ import Home from './pages/home';
 import Account from './pages/account'
 import Cart from './pages/cart'
 import Sobre from './pages/sobre'
+import Favorites from './pages/favorites'
 import ProductPage from './pages/productpage';
 import AdminDashboard from './admin/AdminDashboard';
 import BrandPage from './pages/brands'; // ✅ Nova importação
 import CategoryPage from './pages/categories'; // ✅ Nova importação
+import LandingPage from './pages/landingpage';
 
 function App() {
   const location = useLocation();
@@ -33,10 +35,12 @@ function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/sobre" element={<Sobre />} />
+            <Route path="/favorites" element={<Favorites />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/:brandName" element={<BrandPage />} />
             <Route path="/category/:categoryName" element={<CategoryPage />} />
             <Route path="/productpage" element={<ProductPage />} />
+            <Route path="/landingpage" element={<LandingPage />} />
           </Routes>
       <Footer/>
     </>
