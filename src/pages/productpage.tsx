@@ -65,22 +65,16 @@ export default function ProductPage() {
     }
   }, [product, favorites]);
 
-  const toggleFavorite = () => {
-    if (!product) return;
+ const toggleFavorite = () => {
+  if (!product) return;
 
-    if (isFavorite) {
-      removerDosFavoritos(product.id);
-    } else {
-      adicionarAosFavoritos({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image1 || product.image2 || product.image3 || '',
-        brand: product.brand?.name,
-        category: product.category?.name,
-      });
-    }
-  };
+  if (isFavorite) {
+    removerDosFavoritos(product.id);
+  } else {
+    // MUDA AQUI - PASSA SÓ O ID:
+    adicionarAosFavoritos(product.id);
+  }
+};
 
   const getAllImages = (product: Product): string[] => {
     return [

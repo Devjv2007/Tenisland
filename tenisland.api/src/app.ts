@@ -59,4 +59,5 @@ process.on('beforeExit', async () => {
   await prisma.$disconnect();
 });
 
-// REMOVIDO: export default app
+export default app;
+  

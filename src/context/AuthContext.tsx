@@ -1,4 +1,4 @@
-// src/contexts/AuthContext.tsx
+// src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 const API = "http://192.168.15.167:3001";
@@ -17,6 +17,8 @@ type User = {
 
 type AuthContextType = {
   usuario: User | null;
+  user: User | null;
+  token: string | null;
   modalAberto: boolean;
   abrirModal: () => void;
   fecharModal: () => void;
@@ -28,16 +30,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [usuario, setUsuario] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('user');
-    if (stored) {
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
+    
+    console.log('🔍 Auth - Token do localStorage:', storedToken); // DEBUG
+    console.log('🔍 Auth - User do localStorage:', storedUser); // DEBUG
+    
+    if (storedUser) {
       try {
-        setUsuario(JSON.parse(stored));
+        setUsuario(JSON.parse(storedUser));
       } catch {
         setUsuario(null);
       }
+    }
+    
+    if (storedToken) {
+      setToken(storedToken);
     }
   }, []);
 
@@ -54,9 +66,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Login - Token recebido:', data.token); // DEBUG
+        
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setUsuario(data.user);
+        setToken(data.token);
         return true;
       }
       return false;
@@ -70,12 +85,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUsuario(null);
+    setToken(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
         usuario,
+        user: usuario,
+        token,
         modalAberto,
         abrirModal,
         fecharModal,
