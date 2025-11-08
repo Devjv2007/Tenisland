@@ -10,41 +10,44 @@ import Sobre from './pages/sobre'
 import Favorites from './pages/favorites'
 import ProductPage from './pages/productpage';
 import AdminDashboard from './admin/AdminDashboard';
-import BrandPage from './pages/brands'; // ✅ Nova importação
-import CategoryPage from './pages/categories'; // ✅ Nova importação
+import BrandPage from './pages/brands';
+import CategoryPage from './pages/categories';
 import LandingPage from './pages/landingpage';
+
 
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+
   return (
     <>
-     <Header/>
-          <Sidebar 
+      <Header />
+      <Sidebar />
 
-          />
+      {/* ✅ Container principal com margem esquerda */}
+      <main className="-my-64 min-h-screen">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="/:brandName" element={<BrandPage />} />
+          <Route path="/category/:categoryName" element={<CategoryPage />} />
+          <Route path="/productpage" element={<ProductPage />} />
+          <Route path="/landingpage" element={<LandingPage />} />
+        </Routes>
+      </main>
 
-        
-
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/sobre" element={<Sobre />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/:brandName" element={<BrandPage />} />
-            <Route path="/category/:categoryName" element={<CategoryPage />} />
-            <Route path="/productpage" element={<ProductPage />} />
-            <Route path="/landingpage" element={<LandingPage />} />
-          </Routes>
-      <Footer/>
+      <Footer />
     </>
   );
 }
+
 
 export default App;

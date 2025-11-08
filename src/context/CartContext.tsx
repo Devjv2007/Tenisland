@@ -16,7 +16,8 @@ type CartItem = {
 };
 
 type CartContextType = {
-  items: CartItem[];
+  itensCarrinho: CartItem[]; // ✅ Mantém o nome que você usa nos componentes
+  items: CartItem[]; // ✅ Alias para compatibilidade
   adicionarAoCarrinho: (produto: any, quantity?: number, size?: string, color?: string) => void;
   removerDoCarrinho: (productId: number) => void;
   atualizarQuantidade: (productId: number, quantity: number) => void;
@@ -59,60 +60,61 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [items, carregando]);
 
-  const adicionarAoCarrinho = (produto: any, quantity: number = 1, size?: string, color?: string) => {
-    setItems((prevItems) => {
-      // Verifica se já existe no carrinho (mesmo produto, tamanho e cor)
-      const existingIndex = prevItems.findIndex(
-        (item) => 
-          item.productId === produto.id && 
-          item.size === size && 
-          item.color === color
-      );
-
-      if (existingIndex >= 0) {
-        // Atualiza quantidade
-        const updated = [...prevItems];
-        updated[existingIndex].quantity += quantity;
-        toast.success(`Quantidade atualizada no carrinho!`);
-        return updated;
-      } else {
-        // Adiciona novo item
-        const newItem: CartItem = {
-          id: Date.now(), // ID único temporário
-          productId: produto.id,
-          name: produto.name || produto.nome,
-          price: parseFloat(produto.price || produto.preco),
-          image: produto.image || produto.imageUrl || produto.imagem || '',
-          quantity,
-          size,
-          color,
-        };
-        toast.success(`${newItem.name} adicionado ao carrinho!`);
-        return [...prevItems, newItem];
-      }
-    });
-  };
-
-  const removerDoCarrinho = (productId: number) => {
-    setItems((prevItems) => {
-      const filtered = prevItems.filter((item) => item.id !== productId);
-      toast.info('Item removido do carrinho');
-      return filtered;
-    });
-  };
-
-  const atualizarQuantidade = (productId: number, quantity: number) => {
-    if (quantity <= 0) {
-      removerDoCarrinho(productId);
-      return;
-    }
-
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
-      )
+ const adicionarAoCarrinho = (produto: any, quantity: number = 1, size?: string, color?: string) => {
+  setItems((prevItems) => {
+    // Verifica se já existe no carrinho (mesmo produto, tamanho e cor)
+    const existingIndex = prevItems.findIndex(
+      (item) => 
+        item.productId === produto.id && 
+        item.size === size && 
+        item.color === color
     );
-  };
+
+    if (existingIndex >= 0) {
+      // Atualiza quantidade
+      const updated = [...prevItems];
+      updated[existingIndex].quantity += quantity;
+      toast.success(`Quantidade atualizada no carrinho!`);
+      return updated;
+    } else {
+      // Adiciona novo item
+      const newItem: CartItem = {
+        id: produto.id, // ✅ MUDA AQUI - USA O ID REAL DO PRODUTO
+        productId: produto.id, // ✅ AGORA OS DOIS SÃO IGUAIS
+        name: produto.name || produto.nome,
+        price: parseFloat(produto.price || produto.preco),
+        image: produto.image || produto.imageUrl || produto.imagem || '',
+        quantity,
+        size,
+        color,
+      };
+      toast.success(`${newItem.name} adicionado ao carrinho!`);
+      return [...prevItems, newItem];
+    }
+  });
+};
+
+
+const removerDoCarrinho = (productId: number) => {
+  setItems((prevItems) => {
+    const filtered = prevItems.filter((item) => item.productId !== productId); // MUDA AQUI
+    toast.info('Item removido do carrinho');
+    return filtered;
+  });
+};
+
+const atualizarQuantidade = (productId: number, quantity: number) => {
+  if (quantity <= 0) {
+    removerDoCarrinho(productId);
+    return;
+  }
+
+  setItems((prevItems) =>
+    prevItems.map((item) =>
+      item.productId === productId ? { ...item, quantity } : item // MUDA AQUI
+    )
+  );
+};
 
   const limparCarrinho = () => {
     setItems([]);
@@ -137,7 +139,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   return (
     <CartContext.Provider
       value={{
-        items,
+        itensCarrinho: items, // ✅ CORRIGIDO - usa o estado 'items'
+        items,    
         adicionarAoCarrinho,
         removerDoCarrinho,
         atualizarQuantidade,

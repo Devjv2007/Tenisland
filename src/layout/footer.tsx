@@ -35,14 +35,14 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-black text-white py-12">
+    <footer className=" text-black  my-64">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
 
           <div className="col-span-1">
             <h3 className="text-xl font-bold mb-4">Sua Loja</h3>
-            <p className="text-gray-300 text-sm leading-relaxed">
+            <p className="text-gray-700 text-sm leading-relaxed">
               A melhor experiência em compras online com produtos de qualidade.
             </p>
           </div>
@@ -50,10 +50,10 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Links Rápidos</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="/home" className="text-gray-300 hover:text-white transition-colors">Início</a></li>
-              <li><a href="/sobre" className="text-gray-300 hover:text-white transition-colors">Produtos</a></li>
-              <li><a href="/sobre" className="text-gray-300 hover:text-white transition-colors">Sobre</a></li>
-              <li><a href="/sobre" className="text-gray-300 hover:text-white transition-colors">Contato</a></li>
+              <li><a href="/home" className="text-gray-700 hover:text-white transition-colors">Início</a></li>
+              <li><a href="/sobre" className="text-gray-700 hover:text-white transition-colors">Produtos</a></li>
+              <li><a href="/sobre" className="text-gray-700 hover:text-white transition-colors">Sobre</a></li>
+              <li><a href="/sobre" className="text-gray-700 hover:text-white transition-colors">Contato</a></li>
             </ul>
           </div>    
 
@@ -61,16 +61,16 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Suporte</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="/sobre" className="text-gray-300 hover:text-white transition-colors">Central de Ajuda</a></li>
-              <li><a href="/sobre" className="text-gray-300 hover:text-white transition-colors">Política de Privacidade</a></li>
-              <li><a href="/sobre" className="text-gray-300 hover:text-white transition-colors">Termos de Uso</a></li>
-              <li><a href="/sobre" className="text-gray-300 hover:text-white transition-colors">Devolução</a></li>
+              <li><a href="/sobre" className="text-gray-700 hover:text-white transition-colors">Central de Ajuda</a></li>
+              <li><a href="/sobre" className="text-gray-700 hover:text-white transition-colors">Política de Privacidade</a></li>
+              <li><a href="/sobre" className="text-gray-700 hover:text-white transition-colors">Termos de Uso</a></li>
+              <li><a href="/sobre" className="text-gray-700 hover:text-white transition-colors">Devolução</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-lg font-semibold mb-4">Contato</h4>
-            <div className="space-y-2 text-sm text-gray-300">
+            <div className="space-y-2 text-sm text-gray-700">
               <p> contato@sualooja.com.br</p>
               <p> (18) 99999-9999</p>
               <p> Presidente Prudente - SP</p>

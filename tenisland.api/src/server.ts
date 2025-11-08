@@ -1,5 +1,7 @@
 // src/server.ts
 import app from "./app";
+import ordersRouter from './routes/orders';
+
 
 
 const PORT = Number(process.env.PORT) || 3001;

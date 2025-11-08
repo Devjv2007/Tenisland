@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom'; // ✅ Adiciona useNavigate
 import { useFavorites } from '../context/FavoritesContext';
+import { useCart } from '../context/CartContext'; // ✅ Importa useCart
+import { toast } from 'react-toastify'; // ✅ Opcional: notificações
 
 interface Product {
   id: number;
@@ -21,6 +23,8 @@ interface Product {
 
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate(); // ✅ Hook para navegação programática
+  const { adicionarAoCarrinho } = useCart(); // ✅ Função para adicionar ao carrinho
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +37,6 @@ export default function ProductPage() {
 
   const API_URL = 'http://localhost:3001/api';
 
-  // Função para buscar o produto
   const fetchProduct = useCallback(async (productId: string) => {
     setLoading(true);
     setError(null);
@@ -58,23 +61,21 @@ export default function ProductPage() {
     }
   }, [id, fetchProduct]);
 
-  // Atualiza isFavorite quando product ou favorites mudar
   useEffect(() => {
     if (product) {
       setIsFavorite(verificarSeFavorito(product.id));
     }
   }, [product, favorites]);
 
- const toggleFavorite = () => {
-  if (!product) return;
+  const toggleFavorite = () => {
+    if (!product) return;
 
-  if (isFavorite) {
-    removerDosFavoritos(product.id);
-  } else {
-    // MUDA AQUI - PASSA SÓ O ID:
-    adicionarAosFavoritos(product.id);
-  }
-};
+    if (isFavorite) {
+      removerDosFavoritos(product.id);
+    } else {
+      adicionarAosFavoritos(product.id);
+    }
+  };
 
   const getAllImages = (product: Product): string[] => {
     return [
@@ -88,13 +89,49 @@ export default function ProductPage() {
 
   const availableSizes = ['38', '39', '40', '41', '42', '43', '44', '45'];
 
+  // ✅ Função atualizada para adicionar ao carrinho
   const handleAddToCart = () => {
-    console.log('Adicionado ao carrinho:', {
-      product,
-      quantity,
-      selectedSize,
+    if (!product) return;
+    
+    if (!selectedSize) {
+      toast.error('Por favor, selecione um tamanho'); // ou alert()
+      return;
+    }
+
+    // Adiciona ao carrinho com quantidade e tamanho
+    adicionarAoCarrinho({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image1 || '',
+      size: selectedSize,
+      quantity: quantity
     });
-    alert(`${product?.name} adicionado ao carrinho!`);
+
+    toast.success(`${product.name} adicionado ao carrinho!`);
+  };
+
+  // ✅ Função para "Comprar Agora" - adiciona e redireciona
+  const handleBuyNow = () => {
+    if (!product) return;
+    
+    if (!selectedSize) {
+      toast.error('Por favor, selecione um tamanho');
+      return;
+    }
+
+    // Adiciona ao carrinho
+    adicionarAoCarrinho({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image1 || '',
+      size: selectedSize,
+      quantity: quantity
+    });
+
+    // Redireciona para o carrinho
+    navigate('/cart');
   };
 
   if (loading) {
@@ -137,7 +174,6 @@ export default function ProductPage() {
           {/* Galeria de Imagens */}
           <div className="relative space-y-6">
             
-            {/* Imagem Principal */}
             <div className="aspect-square rounded-lg overflow-hidden relative">
               <div
                 className="flex h-full w-full transition-transform duration-500 ease-in-out"
@@ -156,7 +192,6 @@ export default function ProductPage() {
                 ))}
               </div>
 
-              {/* Botão de Favorito */}
               <button
                 onClick={toggleFavorite}
                 className="absolute top-4 right-4 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all duration-200 z-20 group shadow-lg"
@@ -164,7 +199,6 @@ export default function ProductPage() {
                 <i className={`${isFavorite ? 'ri-heart-fill text-red-500' : 'ri-heart-line text-gray-700'} text-2xl group-hover:scale-110 transition-transform duration-200`}></i>
               </button>
 
-              {/* Botões de Navegação */}
               {images.length > 1 && (
                 <>
                   <button
@@ -216,7 +250,6 @@ export default function ProductPage() {
               )}
             </div>
 
-            {/* Descrição do Produto */}
             {product.description && (
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-black mb-3">Descrição</h3>
@@ -291,7 +324,7 @@ export default function ProductPage() {
 
             <div>
               <h3 className="text-lg font-semibold text-black mb-4">
-                Tamanho
+                Tamanho {!selectedSize && <span className="text-red-500 text-sm">*</span>}
               </h3>
               <div className="grid grid-cols-4 gap-3">
                 {availableSizes.map((size) => (
@@ -353,7 +386,16 @@ export default function ProductPage() {
                   : 'Adicionar ao Carrinho'}
               </button>
 
-              <button className="w-full py-4 border-2 border-black text-black rounded-lg font-bold text-lg hover:bg-black hover:text-white transition-colors">
+              {/* ✅ Botão "Comprar Agora" atualizado */}
+              <button 
+                onClick={handleBuyNow}
+                disabled={product.stock_quantity === 0}
+                className={`w-full py-4 border-2 rounded-lg font-bold text-lg transition-colors ${
+                  product.stock_quantity === 0
+                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+                    : 'border-black text-black hover:bg-black hover:text-white'
+                }`}
+              >
                 Comprar Agora
               </button>
             </div>

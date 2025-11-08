@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
+import CheckoutModal from '../components/CheckoutModal';
 
 const Cart: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Cart: React.FC = () => {
     obterTotal,
   } = useCart();
 
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [cupom, setCupom] = useState('');
   const [desconto, setDesconto] = useState(0);
 
@@ -37,27 +39,10 @@ const Cart: React.FC = () => {
     }
   };
 
-  const finalizarCompra = () => {
-    const user = localStorage.getItem('user');
-    if (!user) {
-      toast.warning('Faça login para finalizar a compra');
-      navigate('/');
-      return;
-    }
-
-    if (items.length === 0) {
-      toast.error('Seu carrinho está vazio');
-      return;
-    }
-
-    // Redireciona para página de checkout
-    navigate('/checkout');
-  };
-
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 pt-20 animate-[fadeIn_0.5s_ease-out]">
-        <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto px-10 py-12">
           <div className="text-center animate-[fadeInUp_0.6s_ease-out]">
             <span className="ri-shopping-cart-line text-gray-300 text-8xl block mb-4"></span>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">
@@ -148,7 +133,7 @@ const Cart: React.FC = () => {
                         <span className="ri-add-line"></span>
                       </button>
                     </div>
-
+                    
                     <button
                       onClick={() => removerDoCarrinho(item.id)}
                       className="text-red-500 hover:text-red-700 text-sm transition-all duration-300 transform hover:scale-110"
@@ -242,7 +227,7 @@ const Cart: React.FC = () => {
               )}
 
               <button
-                onClick={finalizarCompra}
+                onClick={() => setCheckoutModalOpen(true)}
                 className="w-full mt-6 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 font-semibold"
               >
                 Finalizar Compra
@@ -259,6 +244,12 @@ const Cart: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de Checkout */}
+      <CheckoutModal
+        isOpen={checkoutModalOpen}
+        onClose={() => setCheckoutModalOpen(false)}
+      />
 
       <style>{`
         @keyframes fadeIn {

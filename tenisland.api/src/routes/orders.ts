@@ -1,102 +1,80 @@
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
-import { authMiddleware, AuthRequest } from '../middleware/authMiddleware';
+// src/routes/orders.ts
+import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-// GET /orders - Listar pedidos do usuário
-router.get('/', authMiddleware, async (req: AuthRequest, res) => {
+// Criar pedido
+router.post("/", async (req, res) => {
   try {
-    const orders = await prisma.order.findMany({
-      where: { user_id: req.userId },
-      include: {
-        order_items: {
-          include: {
-            product: {
-              include: { brand: true }
-            }
-          }
-        },
-        shipping_address: true
-      },
-      orderBy: { order_date: 'desc' }
-    });
-    
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar pedidos' });
-  }
-});
+    const {
+      userId,
+      customerName,
+      totalAmount,
+      items
+    } = req.body;
 
-// POST /orders - Criar novo pedido
-router.post('/', authMiddleware, async (req: AuthRequest, res) => {
-  try {
-    const { shipping_address_id, payment_method, items } = req.body;
-    
-    // Calcular total
-    let total = 0;
-    for (const item of items) {
-      const product = await prisma.product.findUnique({ where: { id: item.product_id } });
-      total += product!.price.toNumber() * item.quantity;
+    console.log("📦 Dados recebidos:", req.body);
+
+    // Validações básicas
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: "O pedido deve conter pelo menos um item" });
     }
+
+    // Validar productIds
+    const productIds = items.map((item: any) => parseInt(item.productId));
     
-    // Criar pedido
+    // Validar se os produtos existem
+    const products = await prisma.product.findMany({
+      where: { id: { in: productIds } }
+    });
+
+    if (products.length !== productIds.length) {
+      return res.status(400).json({ error: "Um ou mais produtos não existem" });
+    }
+
+    // Criar pedido com itens
     const order = await prisma.order.create({
       data: {
-        user_id: req.userId!,
-        total_amount: total,
-        shipping_address_id,
-        payment_method,
-        order_items: {
+        userId: userId || null,
+        name: customerName,
+        totalAmount: parseFloat(totalAmount),
+        status: 'pending',
+        paymentStatus: 'pending',
+        orderDate: new Date(),
+        orderItems: {
           create: items.map((item: any) => ({
-            product_id: item.product_id,
-            quantity: item.quantity,
-            unit_price: item.unit_price,
-            total_price: item.unit_price * item.quantity
+            productId: parseInt(item.productId),
+            quantity: parseInt(item.quantity),
+            price: parseFloat(item.price),
+            size: item.size || null
           }))
         }
       },
       include: {
-        order_items: {
-          include: { product: true }
+        orderItems: {
+          include: {
+            product: true
+          }
         }
       }
     });
-    
-    res.status(201).json(order);
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao criar pedido' });
-  }
-});
 
-// GET /orders/:id - Buscar pedido específico
-router.get('/:id', authMiddleware, async (req: AuthRequest, res) => {
-  try {
-    const order = await prisma.order.findFirst({
-      where: { 
-        id: parseInt(req.params.id),
-        user_id: req.userId 
-      },
-      include: {
-        order_items: {
-          include: {
-            product: {
-              include: { brand: true }
-            }
-          }
-        },
-        shipping_address: true
-      }
+    console.log(`✅ Pedido #${order.id} criado com sucesso`);
+
+    return res.status(201).json({
+      success: true,
+      message: "Pedido criado com sucesso",
+      order
     });
     
-    if (!order) {
-      return res.status(404).json({ error: 'Pedido não encontrado' });
-    }
-    
-    res.json(order);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar pedido' });
+    console.error("❌ Erro ao criar pedido:", error);
+    return res.status(500).json({ 
+      error: "Erro ao criar pedido",
+      details: error instanceof Error ? error.message : 'Erro desconhecido'
+    });
   }
 });
 

@@ -146,7 +146,8 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="fixed top-20 h-[calc(100vh-4rem)] w-16  shadow-sm z-[9999] overflow-y-auto">
+      <div className="top-20 left-0 w-16 bg-white shadow-sm ">
+
         
         {/* Loading */}
         {loading && (

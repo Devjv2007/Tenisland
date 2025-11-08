@@ -68,42 +68,10 @@ const ImageCarousel = () => {
             
             <div className="absolute bottom-6 left-6 text-white">
               <h3 className="text-2xl font-bold mb-2">{image.title}</h3>
-              <p className="text-gray-300">Descobra a coleção completa</p>
+              <p className="text-gray-300">Descubra a coleção completa</p>
             </div>
           </div>
         ))}
-
-        <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full backdrop-blur-sm transition-all duration-300 z-10"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full backdrop-blur-sm transition-all duration-300 z-10"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide 
-                  ? 'bg-white scale-125' 
-                  : 'bg-white/50 hover:bg-white/75'
-              }`}
-            />
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -136,37 +104,6 @@ export default function Home() {
             className="h-72 rounded-lg hover:scale-105 transition-transform duration-200"
           />         
         </div>
-      </section>
-    
-
-
-
-
-      <section className="flex flex-row mx-auto max-w-6xl p-6 ">
-        <Link to="/nike">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7-dpKSxRuVcSyDRPMgEBBfweI42FyTtr0Kw&s"
-            className="h-64 m-5 hover:scale-105 transition-transform duration-200"
-          />
-        </Link>
-        <Link to="/asics">
-          <img
-            src="https://i.pinimg.com/736x/37/1f/20/371f20c81bc1d31cf5ab3c6f3fa746fd.jpg"
-            className="h-64 m-5 hover:scale-105 transition-transform duration-200"
-          />
-        </Link>
-        <Link to="/adidas">
-          <img
-            src="https://turbologo.com/articles/wp-content/uploads/2019/07/Three-Bars-adidas-logo-1.jpg.webp"
-            className="h-64 m-5 hover:scale-105 transition-transform duration-200"
-          />
-        </Link>
-        <Link to="/jordan">
-          <img
-            src="https://img.icons8.com/?size=192&id=45774&format=png"
-            className="h-64 m-5 hover:scale-105 transition-transform duration-200"
-          />
-        </Link>
       </section>
     </>
   )

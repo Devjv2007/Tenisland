@@ -12,6 +12,44 @@ router.get("/health", (_req, res) => {
   return res.status(200).send("ok");
 });
 
+// ✅ NOVA ROTA: Buscar todos os usuários
+router.get("/", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        birthDate: true,
+        isActive: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    // Transformar para o formato esperado pelo frontend
+    const formattedUsers = users.map(user => ({
+      id: user.id,
+      first_name: user.firstName,
+      last_name: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      birth_date: user.birthDate,
+      is_active: user.isActive,
+      created_at: user.createdAt
+    }));
+
+    return res.json(formattedUsers);
+  } catch (e) {
+    console.error("GET /users error:", e);
+    return res.status(500).json({ error: "Erro ao buscar usuários" });
+  }
+});
+
 // Criar usuário
 router.post("/", async (req, res) => {
   try {

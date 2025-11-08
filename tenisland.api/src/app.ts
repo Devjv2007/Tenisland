@@ -25,7 +25,9 @@ app.use(cors({
   origin: ["http://192.168.15.167:5173", "http://localhost:5173"],
 }));
 
+
 app.use(express.json());
+
 
 // Rotas
 app.use("/api/auth", authRoutes);

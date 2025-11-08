@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const API = "http://192.168.15.167:3001"; // Sua API do TenisLand
 
+
 const Header: React.FC = () => {
   const { usuario, login, logout, modalAberto, fecharModal, abrirModal } = useAuth();
   const { obterTotalItens } = useCart();
@@ -51,13 +52,14 @@ const Header: React.FC = () => {
       setCarregando(true);
       
       try {
-        const response = await fetch(`${API}/api/products/search?q=${encodeURIComponent(termoBusca)}`);
-        
+       const response = await fetch(`${API}/api/products?q=${encodeURIComponent(termoBusca)}`);
+
         if (!response.ok) {
-          throw new Error(`Erro HTTP: ${response.status}`);
+          throw new Error(`Erro ${response.status}: ${response.statusText}`);
         }
 
         const produtos = await response.json();
+
         setResultados(produtos);
         
       } catch (error) {
@@ -173,7 +175,7 @@ const Header: React.FC = () => {
     <>
       <header
         ref={headerRef}
-        className="bg-white shadow-md border-b border-gray-200 relative z-50 animate-[slideInDown_0.6s_ease-out]"
+        className=" bg-white shadow-md border-b border-gray-200 relative z-50 animate-[slideInDown_0.6s_ease-out]"
       >
         <div className="flex items-center justify-between px-4 py-3 lg:px-6">
           
